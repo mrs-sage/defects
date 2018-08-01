@@ -1,0 +1,11 @@
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\x86\Debug\x3OnSiteUsers.exe.config
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.Form1.resources
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.Properties.Resources.resources
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.csproj.GenerateResource.Cache
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\x86\Debug\x3OnSiteUsers.exe
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\x86\Debug\x3OnSiteUsers.pdb
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\x86\Debug\System.Net.Http.dll
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\x86\Debug\System.Net.Http.xml
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.exe
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.pdb
+C:\Users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\x86\Debug\x3OnSiteUsers.csprojResolveAssemblyReference.cache

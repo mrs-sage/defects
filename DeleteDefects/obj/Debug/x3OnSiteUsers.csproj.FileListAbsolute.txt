@@ -1,0 +1,9 @@
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\Debug\x3OnSiteUsers.exe.config
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.csprojResolveAssemblyReference.cache
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.Form1.resources
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.Properties.Resources.resources
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.csproj.GenerateResource.Cache
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\Debug\x3OnSiteUsers.exe
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\bin\Debug\x3OnSiteUsers.pdb
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.exe
+c:\users\mrs\documents\visual studio 2015\Projects\x3OnSiteUsers\x3OnSiteUsers\obj\Debug\x3OnSiteUsers.pdb

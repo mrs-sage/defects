@@ -1,0 +1,12 @@
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\bin\x86\Debug\DeleteDefects.exe.config
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\bin\x86\Debug\DeleteDefects.exe
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\bin\x86\Debug\DeleteDefects.pdb
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\bin\x86\Debug\System.Net.Http.dll
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.csprojAssemblyReference.cache
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\x3OnSiteUsers.Form1.resources
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.Properties.Resources.resources
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.csproj.GenerateResource.cache
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.csproj.CoreCompileInputs.cache
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.csproj.CopyComplete
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.exe
+C:\Users\mrs\Desktop\x3OnSiteUsers\DeleteDefects\obj\x86\Debug\DeleteDefects.pdb
