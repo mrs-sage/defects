@@ -197,7 +197,7 @@ namespace x3OnSiteUsers
             {
                 try
                 {
-                    string query = string.Format("Insert into onsite values ('{0}', cast('{1}' as date), '{2}', '{3}')", txtX3Number.Text, txtActualDate.Text, txtCaseSSO.Text, txtActualUser.Text);
+                    string query = string.Format("Insert into DeletedDefects values ('{0}', cast('{1}' as date), '{2}')", txtX3Number.Text, txtActualDate.Text, txtActualUser.Text);
                     SQLOpenConnection();
                     SqlCommand cmd = new SqlCommand(query, SqlConnection);
                     cmd.ExecuteNonQuery();
@@ -243,28 +243,28 @@ namespace x3OnSiteUsers
                     dataGridView1.Rows.Clear();
                     dataGridView1.Refresh();
 
-                    string query = string.Format("Select casenumber, date, userid from onsite Where x3user='{0}' and (date >= cast('{1}' as Date) and date <= cast('{2}' as Date))", txtX3Number.Text, StartDate, EndtDate);
-                    SQLOpenConnection();
-                    SqlCommand cmd = new SqlCommand(query, SqlConnection);
+                    //string query = string.Format("Select casenumber, date, userid from onsite Where x3user='{0}' and (date >= cast('{1}' as Date) and date <= cast('{2}' as Date))", txtX3Number.Text, StartDate, EndtDate);
+                    //SQLOpenConnection();
+                    //SqlCommand cmd = new SqlCommand(query, SqlConnection);
 
-                    SqlDataReader dr = cmd.ExecuteReader();
+                    //SqlDataReader dr = cmd.ExecuteReader();
 
-                    int count = 0;
+                    //int count = 0;
 
-                    while (dr.Read())
-                    {
-                        string date = dr["date"].ToString();
-                        string casenumber = dr["casenumber"].ToString();
-                        string userid = dr["userid"].ToString();
-                        //date = date. .Year + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0');
-                        date = date.Replace(" 00:00:00", "");
-                        dataGridView1.Rows.Add(casenumber, userid, date);
-                        count++;
-                    }
-                    cmd.Dispose();
-                    SQLCloseConnection();
-                    lblOnSiteNumber.Text = "Nº de assistências já efetuadas entre " + StartDate + " e " + EndtDate + ": " + count.ToString();
-                    txtCaseSSO.Focus();
+                    //while (dr.Read())
+                    //{
+                    //    string date = dr["date"].ToString();
+                    //    string casenumber = dr["casenumber"].ToString();
+                    //    string userid = dr["userid"].ToString();
+                    //    //date = date. .Year + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0');
+                    //    date = date.Replace(" 00:00:00", "");
+                    //    dataGridView1.Rows.Add(casenumber, userid, date);
+                    //    count++;
+                    //}
+                    //cmd.Dispose();
+                    //SQLCloseConnection();
+                    //lblOnSiteNumber.Text = "Nº de assistências já efetuadas entre " + StartDate + " e " + EndtDate + ": " + count.ToString();
+                    //txtCaseSSO.Focus();
                 }
                 else
                 {
