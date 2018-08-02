@@ -22,26 +22,36 @@ namespace x3OnSiteUsers
         public string SqlUser = "master007";
         public string SqlPassword = "Sage2008+";
         private SqlConnection SqlConnection;
-        string[] arrayPath = new string[4];
+        string[] arrayPathSageFolders = new string[5];
 
 
         public Form1()
         {
             InitializeComponent();
-            arrayPath[0] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 50cloud\";
-            arrayPath[1] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 100cloud\";
-            arrayPath[2] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha Gesrest\";
-            arrayPath[3] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha S4Accountants";
+            arrayPathSageFolders[0] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 50cloud\";
+            arrayPathSageFolders[1] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 100cloud\";
+            arrayPathSageFolders[2] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha Gesrest\";
+            arrayPathSageFolders[3] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha S4Accountants";
+            arrayPathSageFolders[4] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha Plus";
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            txtActualDate.Text = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0');
+
+            string query = "Select Max(EliminationDate) from  DeletedDefects";
+            SQLOpenConnection();
+            SqlCommand cmd = new SqlCommand(query, SqlConnection);
+            string lastDeletation = Convert.ToString(cmd.ExecuteScalar());
+            cmd.Dispose();
+            SQLCloseConnection();
+
+            lblMultiFunctions.Text = "Última eliminação em " + lastDeletation.Substring(0, 16);
+
+            //txtActualDate.Text = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0');
             txtActualUser.Text = Environment.UserName;
             txtMachine.Text = Environment.MachineName;
 
-            SearchYearCheck();
-        }
+            }
 
         private void SearchYearCheck()
         {
@@ -53,14 +63,14 @@ namespace x3OnSiteUsers
             string result = "ok";
             try
             {
-                string ConnectionString = string.Format("Server={0};Database={1};uid={2};password={3};MultipleActiveResultSets=true",
+                string ConnectionString = string.Format("Server={0};Database={1};uid={2};password={3};MultipleActiveResultSets=true; timeout=10",
                                                         SqlServerName, SqlDataBaseName, SqlUser, SqlPassword);
                 SqlConnection = new SqlConnection(ConnectionString);
                 SqlConnection.Open();
             }
             catch (Exception ex)
             {
-                result = ex.Message.ToString();
+                MessageBox.Show("Não foi possível ligar ao azure!");
             }
 
             return result;
@@ -128,37 +138,29 @@ namespace x3OnSiteUsers
             return saveStatus;
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ExecuteTxt(string file)
         {
 
             try
             {
-                //var text = File.ReadAllText(file);
-                //text = text.Replace("•	", "");
-
                 System.Collections.Generic.IEnumerable<String> lines = File.ReadLines(file);
+                SQLOpenConnection();
 
                 var numberOfLines = lines.Count();
-
                 int count = 1;
                 foreach (string l in lines)
                 {
-                    lblTEste.Text = string.Format("A validar «{0} de {1}»!", count, numberOfLines);
-                    lblTEste.Update();
-                    lblTEste.Refresh();
-                    lblTEste.Update();
+                    lblMultiFunctions.Text = string.Format("A validar «{0} de {1}» registos!", count, numberOfLines);
+                    lblMultiFunctions.Update();
+                    lblMultiFunctions.Refresh();
+                    lblMultiFunctions.Update();
                     try
                     {
                         var defectID = l.Substring(2, l.Length - 2);
                         var spacePosition = defectID.IndexOf(" ");
                         defectID = defectID.Substring(0, spacePosition);
 
-                        if (IsNumeric(defectID.Substring(1, 1)))
+                        if (IsNumeric(defectID.Substring(0, 1)))
                         {
                             DeleteData(defectID);
                         }
@@ -170,7 +172,9 @@ namespace x3OnSiteUsers
                     count++;
                 }
 
-                lblTEste.Text = "Validação concluída!";
+                lblMultiFunctions.Text = "Validação concluída!";
+                
+                SQLCloseConnection();
             }
             catch
             {
@@ -185,42 +189,52 @@ namespace x3OnSiteUsers
 
         private void DeleteData(string DefectID)
         {
-            foreach (string path in arrayPath)
+
+            foreach (string path in arrayPathSageFolders)
             {
-                DirectoryInfo di = new DirectoryInfo(path);
-                DirectoryInfo[] directories = di.GetDirectories();
-
-                foreach (var directory in directories)
+                try
                 {
-                    if (directory.Name == DefectID)
+                    DirectoryInfo di = new DirectoryInfo(path);
+                    DirectoryInfo[] directories = di.GetDirectories();
+
+                    foreach (var directory in directories)
                     {
-                        foreach (FileInfo file in directory.GetFiles())
-                        {
-
-                            file.Delete();
-
-                        }
-                        
-                        directory.Delete(true);
-                        try
-                        {
-                            string query = string.Format("Insert into DeletedDefects values ('{0}', cast('{1}' as date), '{2}')", DefectID, txtActualDate.Text, txtActualUser.Text);
-                            SQLOpenConnection();
-                            SqlCommand cmd = new SqlCommand(query, SqlConnection);
-                            cmd.ExecuteNonQuery();
-                            cmd.Dispose();
-                            SQLCloseConnection();
-                        }
-                        catch (Exception ex)
+                        if (directory.Name == DefectID)
                         {
                             try
                             {
-                                SQLCloseConnection();
+                                foreach (FileInfo file in directory.GetFiles())
+                                {
+
+                                    file.Delete();
+
+                                }
+
+                                directory.Delete(true);
+
+                                string query = string.Format("Insert into DeletedDefects (DefectId, EliminationMachineID, ApplicationFolder) values ('{0}', '{1}' , '{2}')", DefectID, txtActualUser.Text, di.Name);
+                                SQLOpenConnection();
+                                SqlCommand cmd = new SqlCommand(query, SqlConnection);
+                                cmd.ExecuteNonQuery();
+                                cmd.Dispose();
+
                             }
-                            catch { }
+                            catch (Exception ex)
+                            {
+                                try
+                                {
+                                    string query = string.Format("Insert into ErrorDeleteDefects (DefectId, EliminationMachineID, ApplicationFolder) values ('{0}', '{1}' , '{2}')", DefectID, txtActualUser.Text, di.Name);
+                                    SQLOpenConnection();
+                                    SqlCommand cmd = new SqlCommand(query, SqlConnection);
+                                    cmd.ExecuteNonQuery();
+                                    cmd.Dispose();
+                                }
+                                catch { }
+                            }
                         }
                     }
                 }
+                catch (Exception ex) { }
             }
         }
 
@@ -235,40 +249,6 @@ namespace x3OnSiteUsers
                 ExecuteTxt(ofd.FileName);
             }
 
-            //if (txtCaseSSO.Text.TrimEnd().TrimStart().Length > 0)
-            //{
-            //    try
-            //    {
-            //        string query = string.Format("Insert into DeletedDefects values ('{0}', cast('{1}' as date), '{2}')", txtX3Number.Text, txtActualDate.Text, txtActualUser.Text);
-            //        SQLOpenConnection();
-            //        SqlCommand cmd = new SqlCommand(query, SqlConnection);
-            //        cmd.ExecuteNonQuery();
-            //        cmd.Dispose();
-            //        SQLCloseConnection();
-            //        MessageBox.Show("Registo gravado com sucesso!");
-            //        txtX3Number.Focus();
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        MessageBox.Show("Erro!" + Environment.NewLine + ex.Message.ToString() + Environment.NewLine + Environment.NewLine + "Reporte ao José Sousa!");
-            //    }
-
-            //    dataGridView1.Rows.Clear();
-            //    dataGridView1.Refresh();
-            //    txtX3Number.Text = "";
-            //    txtX3Number.Enabled = true;
-            //    checkCurrentYear.Enabled = true;
-            //    checkFiscalYear.Enabled = true;
-            //    txtCaseSSO.Text = "";
-            //    txtCaseSSO.Enabled = false;
-            //    btnSave.Enabled = false;
-            //    lblOnSiteNumber.Text = "Nº de assistências já efetuadas entre " + StartDate + " e " + EndtDate + ":";
-            //}
-            //else
-            //{
-            //    txtCaseSSO.Focus();
-            //    MessageBox.Show("Registo o nº do Case CRM ou SSO Number!");
-            //}
         }
 
         private void txtX3Number_KeyPress(object sender, KeyPressEventArgs e)
@@ -304,28 +284,114 @@ namespace x3OnSiteUsers
 
         private void btnLogSuccess_Click(object sender, EventArgs e)
         {
-            dataGridView1.Rows.Clear();
-            string query = "Select DefectID, EliminationDate, EliminationMachineID from DeletedDefects Order by EliminationDate Desc";
+            GetDataFromAz(false);
+
+
+        }
+
+        private void GetDataFromAz(bool withError)
+        {
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("DefectId", typeof(string));
+            dt.Columns.Add("Pasta Aplicação", typeof(string));
+            dt.Columns.Add("Data Elim.", typeof(string));
+            dt.Columns.Add("User", typeof(string));
+
+            string query = "";
+
+            if (withError)
+            {
+                query = "Select DefectID, EliminationDate, EliminationMachineID, ApplicationFolder from ErrorDeleteDefects Order by EliminationDate Desc, ApplicationFolder ASC";
+            }
+            else
+            {
+                query = "Select DefectID, EliminationDate, EliminationMachineID, ApplicationFolder from DeletedDefects Order by EliminationDate Desc, ApplicationFolder ASC";
+            }
+
             SQLOpenConnection();
             SqlCommand cmd = new SqlCommand(query, SqlConnection);
-
             SqlDataReader dr = cmd.ExecuteReader();
 
             int count = 0;
-
             while (dr.Read())
             {
                 string date = dr["EliminationDate"].ToString();
-                string casenumber = dr["DefectID"].ToString();
+                string defectId = dr["DefectID"].ToString();
                 string userid = dr["EliminationMachineID"].ToString();
+                string applicationFolder = dr["ApplicationFolder"].ToString();
 
-                date = date.Replace(" 00:00:00", "");
-                dataGridView1.Rows.Add(casenumber, userid, date);
+                if (withError)
+                {
+                    applicationFolder = "ERRO na pasta " + applicationFolder;
+                }
+
+                date = date.Substring(0, 16);
+                dt.Rows.Add(defectId, applicationFolder, date, userid);
                 count++;
             }
             cmd.Dispose();
             SQLCloseConnection();
-            
+
+            dataGridView1.DataSource = dt;
+
+            if (withError)
+                dataGridView1.Columns["DefectId"].ReadOnly = true;
+
+            dataGridView1.Columns["Pasta Aplicação"].ReadOnly = true;
+            dataGridView1.Columns["Data Elim."].ReadOnly = true;
+            dataGridView1.Columns["User"].ReadOnly = true;
+
+            dataGridView1.Columns["DefectId"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns["Pasta Aplicação"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridView1.Columns["Data Elim."].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns["User"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+
+            dataGridView1.Columns["DefectId"].Width = 70;
+            dataGridView1.Columns["Pasta Aplicação"].Width = 388;
+            dataGridView1.Columns["Data Elim."].Width = 94;
+            dataGridView1.Columns["User"].Width = 77;
+        }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Open a Text File";
+            ofd.Filter = "Text Files | *.txt";
+            DialogResult dr = ofd.ShowDialog();
+            if (dr == DialogResult.OK)
+            {
+                ExecuteTxt(ofd.FileName);
+            }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLogSuccess_Click_1(object sender, EventArgs e)
+        {
+            GetDataFromAz(false);
+
+        }
+
+        private void btnLogError_Click(object sender, EventArgs e)
+        {
+            GetDataFromAz(true);
+
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedTab == tabControl1.TabPages[1])
+            {
+                this.Size = new Size(679, 389);
+            }
+            else
+            {
+                this.Size = new Size(526, 153);
+            }
         }
     }
 }
