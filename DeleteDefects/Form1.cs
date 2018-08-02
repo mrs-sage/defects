@@ -19,8 +19,8 @@ namespace x3OnSiteUsers
     {
         public string SqlServerName = "customerservices.database.windows.net,1433";
         public string SqlDataBaseName = "ccsdefectsdata";
-        public string SqlUser = "master007";
-        public string SqlPassword = "Sage2008+";
+        public string SqlUser = "sss";
+        public string SqlPassword = "aaaa+";
         private SqlConnection SqlConnection;
         string[] arrayPathSageFolders = new string[5];
 
@@ -28,11 +28,11 @@ namespace x3OnSiteUsers
         public Form1()
         {
             InitializeComponent();
-            arrayPathSageFolders[0] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 50cloud\";
-            arrayPathSageFolders[1] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha 100cloud\";
-            arrayPathSageFolders[2] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha Gesrest\";
-            arrayPathSageFolders[3] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha S4Accountants";
-            arrayPathSageFolders[4] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\AnaliseRD\Linha Plus";
+            arrayPathSageFolders[0] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha 50cloud\";
+            arrayPathSageFolders[1] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha 100cloud\";
+            arrayPathSageFolders[2] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha Gesrest\";
+            arrayPathSageFolders[3] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha S4Accountants\";
+            arrayPathSageFolders[4] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha Plus\";
         }
 
         private void Form1_Load(object sender, EventArgs e)
