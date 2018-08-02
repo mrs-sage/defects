@@ -139,9 +139,9 @@
             this.lblMultiFunctions.AutoSize = true;
             this.lblMultiFunctions.Location = new System.Drawing.Point(11, 64);
             this.lblMultiFunctions.Name = "lblMultiFunctions";
-            this.lblMultiFunctions.Size = new System.Drawing.Size(95, 13);
+            this.lblMultiFunctions.Size = new System.Drawing.Size(109, 13);
             this.lblMultiFunctions.TabIndex = 91;
-            this.lblMultiFunctions.Text = "Última eliminação: ";
+            this.lblMultiFunctions.Text = "Última eliminação em ";
             // 
             // pictureBox1
             // 

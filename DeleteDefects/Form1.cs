@@ -19,8 +19,8 @@ namespace x3OnSiteUsers
     {
         public string SqlServerName = "customerservices.database.windows.net,1433";
         public string SqlDataBaseName = "ccsdefectsdata";
-        public string SqlUser = "sss";
-        public string SqlPassword = "aaaa+";
+        public string SqlUser = "bond";
+        public string SqlPassword = "empDataBasePass";
         private SqlConnection SqlConnection;
         string[] arrayPathSageFolders = new string[5];
 
@@ -45,7 +45,14 @@ namespace x3OnSiteUsers
             cmd.Dispose();
             SQLCloseConnection();
 
+            try
+            {
             lblMultiFunctions.Text = "Última eliminação em " + lastDeletation.Substring(0, 16);
+            }
+            catch
+            {
+                lblMultiFunctions.Text = "Ainda não foi eliminada nenhuma pasta!";
+            }
 
             //txtActualDate.Text = DateTime.Now.Year + "-" + DateTime.Now.Month.ToString().PadLeft(2, '0') + "-" + DateTime.Now.Day.ToString().PadLeft(2, '0');
             txtActualUser.Text = Environment.UserName;
