@@ -19,20 +19,14 @@ namespace x3OnSiteUsers
     {
         public string SqlServerName = "customerservices.database.windows.net,1433";
         public string SqlDataBaseName = "ccsdefectsdata";
-        public string SqlUser = "bond";
-        public string SqlPassword = "empDataBasePass";
+        public string SqlUser = "oi";
+        public string SqlPassword = "ola";
         private SqlConnection SqlConnection;
-        string[] arrayPathSageFolders = new string[5];
-
+        private bool RunOpenFolder = false;
 
         public Form1()
         {
             InitializeComponent();
-            arrayPathSageFolders[0] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha 50cloud\";
-            arrayPathSageFolders[1] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha 100cloud\";
-            arrayPathSageFolders[2] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha Gesrest\";
-            arrayPathSageFolders[3] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha S4Accountants\";
-            arrayPathSageFolders[4] = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Linha Plus\";
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -47,7 +41,7 @@ namespace x3OnSiteUsers
 
             try
             {
-            lblMultiFunctions.Text = "Última eliminação em " + lastDeletation.Substring(0, 16);
+                lblMultiFunctions.Text = "Última eliminação em " + lastDeletation.Substring(0, 16);
             }
             catch
             {
@@ -58,7 +52,7 @@ namespace x3OnSiteUsers
             txtActualUser.Text = Environment.UserName;
             txtMachine.Text = Environment.MachineName;
 
-            }
+        }
 
         private void SearchYearCheck()
         {
@@ -147,7 +141,8 @@ namespace x3OnSiteUsers
 
         private void ExecuteTxt(string file)
         {
-
+            int successLogs = 0;
+            int errorLogs = 0;
             try
             {
                 System.Collections.Generic.IEnumerable<String> lines = File.ReadLines(file);
@@ -169,7 +164,9 @@ namespace x3OnSiteUsers
 
                         if (IsNumeric(defectID.Substring(0, 1)))
                         {
-                            DeleteData(defectID);
+                            var atcLog = DeleteData(defectID);
+                            successLogs = successLogs + atcLog.Item1;
+                            errorLogs = errorLogs + atcLog.Item2;
                         }
                     }
                     catch (Exception ex)
@@ -179,8 +176,24 @@ namespace x3OnSiteUsers
                     count++;
                 }
 
-                lblMultiFunctions.Text = "Validação concluída!";
-                
+                if (successLogs > 0 && errorLogs > 0)
+                {
+                    lblMultiFunctions.Text = string.Format("«{0}» pastas eliminadas; «{1}» pastas com erro!", successLogs, errorLogs);
+                }
+                else if (successLogs > 0)
+                {
+                    lblMultiFunctions.Text = string.Format("«{0}» pastas eliminadas!", successLogs);
+                }
+                else if (errorLogs > 0)
+                {
+                    lblMultiFunctions.Text = string.Format("«{0}» pastas com erro ao eliminar!", errorLogs);
+                }
+                else
+                {
+                    lblMultiFunctions.Text = "Validação concluída!";
+                }
+
+
                 SQLCloseConnection();
             }
             catch
@@ -194,55 +207,57 @@ namespace x3OnSiteUsers
             return float.TryParse(s, out float output);
         }
 
-        private void DeleteData(string DefectID)
+        private Tuple<int, int> DeleteData(string DefectID)
         {
-
-            foreach (string path in arrayPathSageFolders)
+            int successLogs = 0;
+            int errorLogs = 0;
+            string folderPath = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Defects\";
+            try
             {
-                try
-                {
-                    DirectoryInfo di = new DirectoryInfo(path);
-                    DirectoryInfo[] directories = di.GetDirectories();
+                DirectoryInfo di = new DirectoryInfo(folderPath);
+                DirectoryInfo[] directories = di.GetDirectories();
 
-                    foreach (var directory in directories)
+                foreach (var directory in directories)
+                {
+                    if (directory.Name.Trim() == DefectID.Trim())
                     {
-                        if (directory.Name == DefectID)
+                        try
+                        {
+                            foreach (FileInfo file in directory.GetFiles())
+                            {
+
+                                file.Delete();
+
+                            }
+
+                            directory.Delete(true);
+
+                            string query = string.Format("Insert into DeletedDefects (DefectId, UserId) values ('{0}', '{1}')", DefectID, txtActualUser.Text);
+                            SQLOpenConnection();
+                            SqlCommand cmd = new SqlCommand(query, SqlConnection);
+                            cmd.ExecuteNonQuery();
+                            cmd.Dispose();
+                            successLogs = successLogs + 1;
+                        }
+                        catch (Exception ex)
                         {
                             try
                             {
-                                foreach (FileInfo file in directory.GetFiles())
-                                {
-
-                                    file.Delete();
-
-                                }
-
-                                directory.Delete(true);
-
-                                string query = string.Format("Insert into DeletedDefects (DefectId, EliminationMachineID, ApplicationFolder) values ('{0}', '{1}' , '{2}')", DefectID, txtActualUser.Text, di.Name);
+                                string query = string.Format("Insert into ErrorDeletedDefects (DefectId, UserId) values ('{0}', '{1}')", DefectID, txtActualUser.Text);
                                 SQLOpenConnection();
                                 SqlCommand cmd = new SqlCommand(query, SqlConnection);
                                 cmd.ExecuteNonQuery();
                                 cmd.Dispose();
-
+                                errorLogs = errorLogs + 1;
                             }
-                            catch (Exception ex)
-                            {
-                                try
-                                {
-                                    string query = string.Format("Insert into ErrorDeleteDefects (DefectId, EliminationMachineID, ApplicationFolder) values ('{0}', '{1}' , '{2}')", DefectID, txtActualUser.Text, di.Name);
-                                    SQLOpenConnection();
-                                    SqlCommand cmd = new SqlCommand(query, SqlConnection);
-                                    cmd.ExecuteNonQuery();
-                                    cmd.Dispose();
-                                }
-                                catch { }
-                            }
+                            catch { }
                         }
                     }
                 }
-                catch (Exception ex) { }
             }
+            catch (Exception ex) { }
+
+            return Tuple.Create(successLogs, errorLogs);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -300,20 +315,20 @@ namespace x3OnSiteUsers
         {
             DataTable dt = new DataTable();
 
+
             dt.Columns.Add("DefectId", typeof(string));
-            dt.Columns.Add("Pasta Aplicação", typeof(string));
-            dt.Columns.Add("Data Elim.", typeof(string));
+            dt.Columns.Add("Data Eliminação", typeof(string));
             dt.Columns.Add("User", typeof(string));
 
             string query = "";
 
             if (withError)
             {
-                query = "Select DefectID, EliminationDate, EliminationMachineID, ApplicationFolder from ErrorDeleteDefects Order by EliminationDate Desc, ApplicationFolder ASC";
+                query = "Select DefectID, EliminationDate, UserId from ErrorDeletedDefects Order by EliminationDate Desc";
             }
             else
             {
-                query = "Select DefectID, EliminationDate, EliminationMachineID, ApplicationFolder from DeletedDefects Order by EliminationDate Desc, ApplicationFolder ASC";
+                query = "Select DefectID, EliminationDate, UserId from DeletedDefects Order by EliminationDate Desc";
             }
 
             SQLOpenConnection();
@@ -325,16 +340,15 @@ namespace x3OnSiteUsers
             {
                 string date = dr["EliminationDate"].ToString();
                 string defectId = dr["DefectID"].ToString();
-                string userid = dr["EliminationMachineID"].ToString();
-                string applicationFolder = dr["ApplicationFolder"].ToString();
+                string userid = dr["UserId"].ToString();
 
                 if (withError)
                 {
-                    applicationFolder = "ERRO na pasta " + applicationFolder;
+                    defectId = "Não foi possível eliminar a pasta " + defectId;
                 }
 
                 date = date.Substring(0, 16);
-                dt.Rows.Add(defectId, applicationFolder, date, userid);
+                dt.Rows.Add(defectId, date, userid);
                 count++;
             }
             cmd.Dispose();
@@ -342,22 +356,46 @@ namespace x3OnSiteUsers
 
             dataGridView1.DataSource = dt;
 
-            if (withError)
-                dataGridView1.Columns["DefectId"].ReadOnly = true;
 
-            dataGridView1.Columns["Pasta Aplicação"].ReadOnly = true;
-            dataGridView1.Columns["Data Elim."].ReadOnly = true;
+            dataGridView1.Columns["DefectId"].ReadOnly = true;
+            dataGridView1.Columns["Data Eliminação"].ReadOnly = true;
             dataGridView1.Columns["User"].ReadOnly = true;
 
             dataGridView1.Columns["DefectId"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridView1.Columns["Pasta Aplicação"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridView1.Columns["Data Elim."].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            dataGridView1.Columns["User"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dataGridView1.Columns["Data Eliminação"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView1.Columns["User"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
 
-            dataGridView1.Columns["DefectId"].Width = 70;
-            dataGridView1.Columns["Pasta Aplicação"].Width = 388;
-            dataGridView1.Columns["Data Elim."].Width = 94;
-            dataGridView1.Columns["User"].Width = 77;
+
+            if (count > 11)
+            {
+                if (withError)
+                {
+                    dataGridView1.Columns["DefectId"].Width = 300;
+                    dataGridView1.Columns["Data Eliminação"].Width = 107;
+                    dataGridView1.Columns["User"].Width = 62;
+                }
+                else
+                {
+                    dataGridView1.Columns["DefectId"].Width = 162;
+                    dataGridView1.Columns["Data Eliminação"].Width = 162;
+                    dataGridView1.Columns["User"].Width = 145;
+                }
+            }
+            else
+            {
+                if (withError)
+                {
+                    dataGridView1.Columns["DefectId"].Width = 300;
+                    dataGridView1.Columns["Data Eliminação"].Width = 108;
+                    dataGridView1.Columns["User"].Width = 78;
+                }
+                else
+                {
+                    dataGridView1.Columns["DefectId"].Width = 162;
+                    dataGridView1.Columns["Data Eliminação"].Width = 162;
+                    dataGridView1.Columns["User"].Width = 162;
+                }
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -379,12 +417,16 @@ namespace x3OnSiteUsers
 
         private void btnLogSuccess_Click_1(object sender, EventArgs e)
         {
+            lblOpenFolder.Visible = false;
+            RunOpenFolder = false;
             GetDataFromAz(false);
 
         }
 
         private void btnLogError_Click(object sender, EventArgs e)
         {
+            lblOpenFolder.Visible = true;
+            RunOpenFolder = true;
             GetDataFromAz(true);
 
         }
@@ -393,11 +435,38 @@ namespace x3OnSiteUsers
         {
             if (tabControl1.SelectedTab == tabControl1.TabPages[1])
             {
-                this.Size = new Size(679, 389);
+                this.Size = new Size(530, 394);
             }
             else
             {
-                this.Size = new Size(526, 153);
+                this.Size = new Size(530, 153);
+            }
+        }
+
+        private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            //MessageBox.Show(dataGridView1.SelectedCells[0].Value.ToString());
+            if (RunOpenFolder)
+            {
+                var value = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
+                var pos = value.LastIndexOf(" ");
+                var length = value.Length - pos - 1;
+                var final = value.Substring(pos + 1, length);
+
+                string folderPath = @"\\sagept-fs-cloud\dep_srv\Suporte CCS\BdDefects\Defects\" + final;
+
+                if (Directory.Exists(folderPath))
+                {
+                    System.Diagnostics.Process proc = new System.Diagnostics.Process();
+                    proc.StartInfo.UseShellExecute = true;
+                    proc.StartInfo.FileName = folderPath;
+                    proc.Start();
+                    proc.Close();
+                }
+                else
+                {
+                    MessageBox.Show("A pasta atualmente já não existe!");
+                }
             }
         }
     }

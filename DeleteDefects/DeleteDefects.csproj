@@ -52,7 +52,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Oxygen-Icons.org-Oxygen-Apps-basket.ico</ApplicationIcon>
+    <ApplicationIcon>ox.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -103,7 +103,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ca.ico" />
+    <Content Include="ox.ico" />
     <Content Include="Oxygen-Icons.org-Oxygen-Apps-basket.ico" />
+    <Content Include="SqlQueryDataBase.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

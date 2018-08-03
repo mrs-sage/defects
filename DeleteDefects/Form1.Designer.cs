@@ -42,6 +42,7 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.btnLogError = new System.Windows.Forms.Button();
             this.btnLogSuccess = new System.Windows.Forms.Button();
+            this.lblOpenFolder = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -54,11 +55,12 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(11, 44);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 51);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersVisible = false;
-            this.dataGridView1.Size = new System.Drawing.Size(650, 282);
+            this.dataGridView1.Size = new System.Drawing.Size(490, 275);
             this.dataGridView1.TabIndex = 91;
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView1_CellClick);
             // 
             // tabControl1
             // 
@@ -155,6 +157,7 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Gainsboro;
+            this.tabPage2.Controls.Add(this.lblOpenFolder);
             this.tabPage2.Controls.Add(this.btnLogError);
             this.tabPage2.Controls.Add(this.btnLogSuccess);
             this.tabPage2.Controls.Add(this.dataGridView1);
@@ -167,9 +170,9 @@
             // 
             // btnLogError
             // 
-            this.btnLogError.Location = new System.Drawing.Point(232, 11);
+            this.btnLogError.Location = new System.Drawing.Point(277, 9);
             this.btnLogError.Name = "btnLogError";
-            this.btnLogError.Size = new System.Drawing.Size(204, 23);
+            this.btnLogError.Size = new System.Drawing.Size(224, 23);
             this.btnLogError.TabIndex = 96;
             this.btnLogError.Text = "Registo de Erros ao Eliminar";
             this.btnLogError.UseVisualStyleBackColor = true;
@@ -177,13 +180,24 @@
             // 
             // btnLogSuccess
             // 
-            this.btnLogSuccess.Location = new System.Drawing.Point(11, 11);
+            this.btnLogSuccess.Location = new System.Drawing.Point(13, 9);
             this.btnLogSuccess.Name = "btnLogSuccess";
-            this.btnLogSuccess.Size = new System.Drawing.Size(204, 23);
+            this.btnLogSuccess.Size = new System.Drawing.Size(243, 23);
             this.btnLogSuccess.TabIndex = 95;
             this.btnLogSuccess.Text = "Registo de Dados Eliminados";
             this.btnLogSuccess.UseVisualStyleBackColor = true;
             this.btnLogSuccess.Click += new System.EventHandler(this.btnLogSuccess_Click_1);
+            // 
+            // lblOpenFolder
+            // 
+            this.lblOpenFolder.AutoSize = true;
+            this.lblOpenFolder.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblOpenFolder.Location = new System.Drawing.Point(10, 37);
+            this.lblOpenFolder.Name = "lblOpenFolder";
+            this.lblOpenFolder.Size = new System.Drawing.Size(164, 13);
+            this.lblOpenFolder.TabIndex = 97;
+            this.lblOpenFolder.Text = "Clique na linha para abrir a pasta!";
+            this.lblOpenFolder.Visible = false;
             // 
             // Form1
             // 
@@ -196,7 +210,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Form1";
-            this.Text = "Eliminar dados de defects";
+            this.Text = "Eliminar Pastas de Defects";
             this.Activated += new System.EventHandler(this.Form1_Activated);
             this.Load += new System.EventHandler(this.Form1_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
@@ -205,6 +219,7 @@
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -223,6 +238,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtActualUser;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label lblOpenFolder;
     }
 }
 
