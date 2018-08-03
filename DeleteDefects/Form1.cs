@@ -18,7 +18,7 @@ namespace x3OnSiteUsers
     public partial class Form1 : Form
     {
         public string SqlServerName = "customerservices.database.windows.net,1433";
-        public string SqlDataBaseName = "ccsdefectsdata";
+        public string SqlDataBaseName = "ccsdata";
         public string SqlUser = "oi";
         public string SqlPassword = "ola";
         private SqlConnection SqlConnection;
