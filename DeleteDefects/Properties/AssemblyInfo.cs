@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("x3OnSiteUsers")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Delete Defects")]
+[assembly: AssemblyDescription("Delete Defects Folder")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("x3OnSiteUsers")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCompany("Sage CCS")]
+[assembly: AssemblyProduct("DelDefectsCCS")]
+[assembly: AssemblyCopyright("Sage CCS ©  2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

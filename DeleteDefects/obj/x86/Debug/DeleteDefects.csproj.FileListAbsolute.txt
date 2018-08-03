@@ -21,4 +21,3 @@ C:\Users\mrs\Source\Repos\CCSdefects\DeleteDefects\obj\x86\Debug\DeleteDefects.c
 C:\Users\mrs\Source\Repos\CCSdefects\DeleteDefects\obj\x86\Debug\DeleteDefects.csproj.CopyComplete
 C:\Users\mrs\Source\Repos\CCSdefects\DeleteDefects\obj\x86\Debug\DeleteDefects.exe
 C:\Users\mrs\Source\Repos\CCSdefects\DeleteDefects\obj\x86\Debug\DeleteDefects.pdb
-C:\Users\mrs\Source\Repos\CCSdefects\DeleteDefects\obj\x86\Debug\DeleteDefects.csprojAssemblyReference.cache

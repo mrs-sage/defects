@@ -20,7 +20,7 @@ namespace x3OnSiteUsers
         public string SqlServerName = "customerservices.database.windows.net,1433";
         public string SqlDataBaseName = "ccsdata";
         public string SqlUser = "oi";
-        public string SqlPassword = "ola";
+        public string SqlPassword = "al";
         private SqlConnection SqlConnection;
         private bool RunOpenFolder = false;
 
